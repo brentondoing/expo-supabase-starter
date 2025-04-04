@@ -210,11 +210,19 @@ export default function Home() {
 				}
 
 				const formData = new FormData();
-				formData.append('file', {
-					uri: uri,
-					type: 'audio/m4a',
-					name: 'recording.m4a',
-				} as any);
+				
+				if (Platform.OS === 'web') {
+					const response = await fetch(uri);
+					const blob = await response.blob();
+					formData.append('file', blob, 'recording.m4a');
+				} else {
+					formData.append('file', {
+						uri: uri,
+						type: 'audio/m4a',
+						name: 'recording.m4a',
+					} as any);
+				}
+
 				formData.append('model', 'whisper-1');
 
 				const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {

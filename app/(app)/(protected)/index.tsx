@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { View, Animated, ScrollView, ActivityIndicator } from "react-native";
+import { View, Animated, ScrollView, ActivityIndicator, Platform } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import { Audio } from "expo-av";
 import * as FileSystem from 'expo-file-system';
@@ -202,13 +202,13 @@ export default function Home() {
 			console.log('Recording URI:', uri);
 			
 			if (uri) {
-				// Check file size
-				const fileInfo = await FileSystem.getInfoAsync(uri);
-				if (fileInfo.exists && 'size' in fileInfo && fileInfo.size > MAX_FILE_SIZE) {
-					throw new Error('Recording is too large. Maximum size is 25MB.');
+				if (Platform.OS !== 'web') {
+					const fileInfo = await FileSystem.getInfoAsync(uri);
+					if (fileInfo.exists && 'size' in fileInfo && fileInfo.size > MAX_FILE_SIZE) {
+						throw new Error('Recording is too large. Maximum size is 25MB.');
+					}
 				}
 
-				// Create form data for the file upload
 				const formData = new FormData();
 				formData.append('file', {
 					uri: uri,
@@ -217,12 +217,10 @@ export default function Home() {
 				} as any);
 				formData.append('model', 'whisper-1');
 
-				// Send to OpenAI Whisper API
 				const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
 					method: "POST",
 					headers: {
 						"Authorization": `Bearer ${OPENAI_API_KEY}`,
-						"Content-Type": "multipart/form-data",
 					},
 					body: formData,
 				});
@@ -236,24 +234,19 @@ export default function Home() {
 				const data = await response.json();
 				const transcriptionText = data.text;
 
-				// Check transcription length
 				if (transcriptionText.length > MAX_TRANSCRIPTION_LENGTH) {
 					throw new Error('Transcription is too long. Maximum length is 100,000 characters.');
 				}
 
-				// Set transcription for processing, but don't display it directly
 				setTranscription(transcriptionText); 
 				console.log('Transcription:', transcriptionText);
 
-				// Generate title and medical notes
 				if (user) {
 					const title = await generateTitle(transcriptionText);
 					const medicalNotes = await generateMedicalNotes(transcriptionText);
 					
-					// Set medical notes for display
 					setMedicalNotesDisplay(medicalNotes);
 
-					// Save to Supabase with both transcript and medical notes
 					const { error } = await supabase
 						.from('transcriptions')
 						.insert([
@@ -275,7 +268,6 @@ export default function Home() {
 			setRecording(null);
 		} catch (err) {
 			console.error('Failed to process recording:', err);
-			// Display error in the medical notes area
 			setMedicalNotesDisplay(err instanceof Error ? err.message : "Error processing recording. Please try again.");
 		} finally {
 			setIsProcessing(false);

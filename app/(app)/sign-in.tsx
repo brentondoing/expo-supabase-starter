@@ -42,7 +42,10 @@ export default function SignIn() {
 	return (
 		<SafeAreaView className="flex-1 bg-background p-4" edges={["bottom"]}>
 			<View className="flex-1 gap-4 web:m-4">
-				<H1 className="self-start ">Sign In</H1>
+				<H1 className="self-start ">Brenton's Note Recorder</H1>
+				<Text className="text-muted-foreground text-base">
+					Welcome back! Please sign in to continue.
+				</Text>
 				<Form {...form}>
 					<View className="gap-4">
 						<FormField

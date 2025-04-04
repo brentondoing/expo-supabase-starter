@@ -39,16 +39,17 @@ export default function AppLayout() {
 					presentation: "modal",
 					headerShown: true,
 					headerTitle: "Sign In",
+					headerTitleStyle: {
+						color: colorScheme === "dark"
+							? colors.dark.text
+							: colors.light.text,
+					},
 					headerStyle: {
 						backgroundColor:
 							colorScheme === "dark"
 								? colors.dark.background
 								: colors.light.background,
 					},
-					headerTintColor:
-						colorScheme === "dark"
-							? colors.dark.foreground
-							: colors.light.foreground,
 					gestureEnabled: true,
 				}}
 			/>

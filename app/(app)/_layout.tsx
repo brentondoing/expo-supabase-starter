@@ -71,6 +71,25 @@ export default function AppLayout() {
 					gestureEnabled: true,
 				}}
 			/>
+			<Stack.Screen
+				name="transcriptions-modal"
+				options={{
+					presentation: "modal",
+					headerShown: true,
+					headerTitle: "Transcriptions",
+					headerStyle: {
+						backgroundColor:
+							colorScheme === "dark"
+								? colors.dark.background
+								: colors.light.background,
+					},
+					headerTintColor:
+						colorScheme === "dark"
+							? colors.dark.foreground
+							: colors.light.foreground,
+					gestureEnabled: true,
+				}}
+			/>
 		</Stack>
 	);
 }

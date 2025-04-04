@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Audio } from "expo-av";
 import * as FileSystem from 'expo-file-system';
 import { SafeAreaView } from "react-native-safe-area-context";
+import Markdown from 'react-native-markdown-display';
 
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -305,9 +306,7 @@ export default function Home() {
 					<View className="flex-1 mt-2 px-4 w-full">
 						<ScrollView>
 							{/* Display Medical Notes */}
-							<Text className="text-card-foreground">
-								{medicalNotesDisplay}
-							</Text>
+							<Markdown>{medicalNotesDisplay}</Markdown>
 
 							{/* Display Original Transcript */}
 							{transcription && (
@@ -315,9 +314,7 @@ export default function Home() {
 									 <Text className="text-sm font-semibold text-muted-foreground mb-2">
 										 Original Transcript:
 									 </Text>
-									 <Text className="text-sm text-card-foreground">
-										 {transcription}
-									 </Text>
+									 <Markdown style={{body: {fontSize: 14}}}>{transcription}</Markdown> 
 								 </View>
 							)}
 						</ScrollView>

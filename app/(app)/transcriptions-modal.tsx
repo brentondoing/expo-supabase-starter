@@ -4,6 +4,7 @@ import { Text } from "@/components/ui/text";
 import { supabase } from "@/config/supabase";
 import { useSupabase } from "@/context/supabase-provider";
 import { useEffect, useState } from "react";
+import Markdown from 'react-native-markdown-display';
 
 type Transcription = {
 	id: number;
@@ -87,19 +88,17 @@ export default function TranscriptionsModal() {
 								<Text className="text-lg font-semibold text-card-foreground mb-2">
 									{transcription.title}
 								</Text>
-								<Text className="text-card-foreground">
+								<Markdown>
 									{expandedId === transcription.id 
 										? transcription.medical_notes 
 										: getPreviewText(transcription.medical_notes)}
-								</Text>
+								</Markdown>
 								{expandedId === transcription.id && (
 									<View className="mt-4 pt-4 border-t border-border">
 										<Text className="text-sm font-semibold text-muted-foreground mb-2">
 											Original Transcript:
 										</Text>
-										<Text className="text-sm text-card-foreground">
-											{transcription.content}
-										</Text>
+										<Markdown style={{body: {fontSize: 14}}}>{transcription.content}</Markdown>
 									</View>
 								)}
 								<Text className="text-xs text-muted-foreground mt-2">
